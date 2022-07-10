@@ -1,0 +1,81 @@
+:root {
+  --background-color:#FFFFF7;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+canvas {
+    box-shadow: black 10px 30px 50px;
+    margin: 2px;
+}
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: var(--background-color);
+}
+
+.item {
+  display: none;
+}
+
+.stats {
+  display: flex;
+  justify-content: flex-start;
+  gap: 30px;
+  width: 400px;
+}
+
+.stats_item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 60px;
+}
+
+.apple,
+.trophy {
+  width: 30px;
+  height: 30px;
+}
+
+.score-text {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.8rem;
+    margin-left: 7px;
+}
+
+.btn {
+	box-shadow: 0px 10px 14px -7px #276873;
+	background:linear-gradient(to bottom, #483C32 5%, #408c99 100%);
+	background-color:#483C32;
+	border-radius:8px;
+	display:block;
+	cursor:pointer;
+	color:#ffffff;
+	font-size:12px;
+	font-weight:bold;
+	padding:6px 15px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #3d768a;
+    text-transform: uppercase;
+}
+.btn:hover {
+	background:linear-gradient(to bottom, #408c99 5%, #483C32 100%);
+	background-color:#408c99;
+}
+.btn:active {
+	position:relative;
+	top:1px;
+}
+
+.btn-container {
+    display: flex;
+    justify-content: flex-start;
+    gap: 2rem;
+}

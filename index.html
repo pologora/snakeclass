@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Snake</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  </head>
+  <body>
+    <div class="game">
+      <header>
+        <div class="stats">
+          <div class="stats_item">
+            <img class="img apple" src="/images/apple.png" alt="apple" />
+            <p class="score-text" id="score"></p>
+          </div>
+          <div class="stats_item">
+            <img class="img trophy" src="/images/trophy.png" alt="trophy" />
+            <p class="score-text" id="best-score"></p>
+          </div>
+          <div class="stats_item">
+            <img class="img trophy" src="/images/running.png" alt="trophy" />
+            <p class="score-text" id="speed">10</p>
+          </div>
+          <div class="stats_item">
+            <img class="img trophy" src="/images/bomb.png" alt="trophy" />
+            <p class="score-text" id="bomb">10</p>
+          </div>
+        </div>
+      </header>
+      <canvas id="canvas" width="400" height="400"></canvas>
+      <div class="btn-container">
+        <button class="start-game btn">play again</button>
+      </div>
+    </div>
+    <img src="./images/apple.png" id="apple" class="item" />
+    <img src="./images/bomb.png" id="bomb" class="item" />
+    <script src="app.js" type="module"></script>
+  </body>
+</html>
