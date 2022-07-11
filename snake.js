@@ -1,12 +1,12 @@
 class Snake {
-  constructor() {
+  constructor(scale) {
     this.body = [
       { x: 0, y: 0 },
-      { x: 20, y: 0 },
+      { x: scale, y: 0 },
     ]
     this.xDir = 0
     this.yDir = 0
-    this.scale = 1
+    this.scale = scale
   }
 
   update() {
@@ -58,7 +58,7 @@ class Snake {
   reset() {
     this.body = [
       { x: 0, y: 0 },
-      { x: 20, y: 0 },
+      { x: this.scale, y: 0 },
     ]
     this.xDir = 0
     this.yDir = 0

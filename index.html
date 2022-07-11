@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="modal.css" />
     <title>Snake</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
   </head>
@@ -24,15 +25,61 @@
             <img class="img trophy" src="/images/running.png" alt="trophy" />
             <p class="score-text" id="speed">10</p>
           </div>
-          <div class="stats_item">
-            <img class="img trophy" src="/images/bomb.png" alt="trophy" />
-            <p class="score-text" id="bomb">10</p>
-          </div>
         </div>
       </header>
       <canvas id="canvas" width="400" height="400"></canvas>
-      <div class="btn-container">
-        <button class="start-game btn">play again</button>
+    </div>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Snake game:)</h2>
+        </div>
+        <div class="modal-body">
+          <img src="/images/snake.png" alt="" srcset="" />
+          <div class="instruction">
+            <div class="keys">
+              <h2 class="instruction__title">
+                How to Play
+              </h2>
+              <div class="instruction__keys">
+                <p>Press any arrow key to start the move</p>
+                <span class="instruction__key"><kbd>w</kbd> Move Up </span>
+                <span class="instruction__key"><kbd>a</kbd> Move Left </span>
+                <span class="instruction__key"><kbd>s</kbd> Move Down </span>
+                <span class="instruction__key"><kbd>d</kbd> Move Right </span>
+              </div>
+            </div>
+            <div class="rules">
+              <h2>Rules</h2>
+              <div class="rules__rule">
+                <p class="rule">You have only 1 live</p>
+                <h4>Every 5 apples:</h4>
+                <ul>
+                  <li>speed will be increased by 25%</li>
+                  <li>bomb will appear</li>
+                  <li>bomb will change its position faster</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="stats stats-modal" id="stats-modal">
+            <div class="stats_item modal-item">
+              <img class="img apple" src="/images/apple.png" alt="apple" />
+              <p class="score-text" id="score-modal"></p>
+            </div>
+            <div class="stats_item modal-item">
+              <img class="img trophy" src="/images/trophy.png" alt="trophy" />
+              <p class="score-text" id="best-score-modal"></p>
+            </div>
+            <div class="stats_item modal-item">
+              <img class="img trophy" src="/images/running.png" alt="trophy" />
+              <p class="score-text" id="speed-modal"></p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="start-btn" class="btn start-btn">start the game</button>
+        </div>
       </div>
     </div>
     <img src="./images/apple.png" id="apple" class="item" />
