@@ -21,7 +21,7 @@ let snakeMoveInterval, bobmInterval
 let bombDuration = initialBombDuration
 let minBombDuration = 2000
 let score = 0
-let record = +window.sessionStorage.getItem('record')
+let record = +window.localStorage.getItem('record')
 let speedForStats = 1
 
 const displayScore = () => {
@@ -198,7 +198,7 @@ const keyPressed = (event) => {
 
 const gameOver = () => {
   window.removeEventListener('keydown', keyPressed)
-  window.sessionStorage.setItem('record', record)
+  window.localStorage.setItem('record', record)
   setModalStats()
   statsModalElement.style.display = 'flex'
   resetGame()
