@@ -20,9 +20,13 @@ class Snake {
   }
 
   show(ctx, color) {
+    let tailRadius = this.scale / 4
     for (let i = 0; i < this.body.length; i++) {
+      tailRadius = tailRadius + (this.scale / 2 - this.scale / 4) / this.body.length
+      ctx.beginPath()
       ctx.fillStyle = color
-      ctx.fillRect(this.body[i].x, this.body[i].y, this.scale, this.scale)
+      ctx.arc(this.body[i].x + this.scale / 2, this.body[i].y + this.scale / 2, tailRadius, 0, 2 * Math.PI)
+      ctx.fill()
     }
   }
 
