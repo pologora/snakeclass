@@ -1,7 +1,6 @@
 # Snake game
 
 https://best-ever-snake-game.netlify.app/
-
 ## Rules
 
 - You have only 1 live
