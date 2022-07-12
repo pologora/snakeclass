@@ -1,5 +1,4 @@
 export const snakeColor = '#483C32'
-export const foodColor = 'red'
 export const canvasBackgroundColor = '#00BFFF'
 export const initialSnakeMoveSpeed = 500
 export const scale = 20

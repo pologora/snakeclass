@@ -43,10 +43,6 @@ class Snake {
     this.body.push({ ...this.body[this.body.length - 1] })
   }
 
-  playSound(sound) {
-    sound.play()
-  }
-
   touchItem(item) {
     const headX = this.body[this.body.length - 1].x
     const headY = this.body[this.body.length - 1].y
