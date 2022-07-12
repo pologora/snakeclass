@@ -17,12 +17,22 @@ const statsModalElement = document.getElementById('stats-modal')
 //---------------------------setup------------------------------------//
 let speed = initialSnakeMoveSpeed
 let lastDirection = ''
+
+//variables for interval clearing
 let snakeMoveInterval, bobmInterval
+
+//milliseconds
 let bombDuration = initialBombDuration
 let minBombDuration = 2000
+
 let score = 0
 let record = +window.localStorage.getItem('record')
 let speedForStats = 1
+
+const canvas = document.getElementById('canvas')
+const ctx = canvas.getContext('2d')
+export const canvasWidth = canvas.clientWidth
+const snake = new Snake(scale)
 
 const displayScore = () => {
   if (score > record) record = score
@@ -31,6 +41,7 @@ const displayScore = () => {
   speedItem.textContent = speedForStats
 }
 
+//stats after game
 const setModalStats = () => {
   scoreItemModal.textContent = score
   betstScoreItemModal.textContent = record
@@ -39,10 +50,6 @@ const setModalStats = () => {
 
 displayScore()
 
-const canvas = document.getElementById('canvas')
-const ctx = canvas.getContext('2d')
-export const canvasWidth = canvas.clientWidth
-const snake = new Snake(scale)
 
 let food = {
   coordinates: randomCoordinates(),
@@ -53,23 +60,25 @@ let bomb = {
   name: 'bomb',
 }
 
+//----------------------------------------------------------------------//
+
+//----------------------------------------------------------------------//
 startBtn.onclick = function () {
   modal.style.display = 'none'
   resetGame()
   startGame()
 }
-//----------------------------------------------------------------------//
 
-//---------------------------------------------------------------------//
 const startGame = () => {
   window.addEventListener('keydown', keyPressed)
   if (score >= gameScoreTillBomb) {
     locateBomb()
     bobmInterval = setInterval(locateBomb, bombDuration)
   }
-  main()
+  gameLoop()
 }
-const main = () => {
+
+const gameLoop = () => {
   if (snakeMoveInterval) {
     clearInterval(snakeMoveInterval)
   }
@@ -113,7 +122,7 @@ const draw = () => {
       speed = increaseSnakeSpeed(speed)
       speedForStats++
       displayScore()
-      if (bobmInterval >= minBombDuration) {
+      if (bombDuration > minBombDuration) {
         bombDuration = decreaseBombDuration(bombDuration)
       }
       clearInterval(bobmInterval)
@@ -122,6 +131,7 @@ const draw = () => {
     }
   }
   checkSamePositions()
+
   if (score >= gameScoreTillBomb) {
     drawBomb(ctx, bomb)
   }
@@ -130,25 +140,12 @@ const draw = () => {
   snake.update()
   snake.show(ctx, snakeColor)
 
-  if (snake.touchItem(bomb)) {
-    playSound(bombExplosionSound)
-    gameOver()
-  }
-
-  if (snake.tailCollision()) {
-    playSound(hitTailSound)
-    gameOver()
-  }
-
-  if (snake.wallCollision()) {
-    playSound(hitWallSound)
-    gameOver()
-  }
+  checkCollisions()
 }
 
 const move = () => {
   draw()
-  main()
+  gameLoop()
 }
 
 //-----------------------------------keyEvent-----------------------------------------//
@@ -173,7 +170,6 @@ const keyPressed = (event) => {
       if (lastDirection !== 'Up' && lastDirection !== 'Down') {
         snake.setDir(0, 1)
         lastDirection = 'Down'
-        clearInterval(snakeMoveInterval)
         changeMoveDirection()
       }
       break
@@ -234,3 +230,22 @@ const checkSamePositions = () => {
   checkBombPosition()
 }
 //---------------------------------------------------------------------------------------------//
+//check game over cases
+const checkCollisions = () => {
+  if (snake.touchItem(bomb)) {
+    playSound(bombExplosionSound)
+    gameOver()
+    return
+  }
+
+  if (snake.tailCollision()) {
+    playSound(hitTailSound)
+    gameOver()
+    return
+  }
+
+  if (snake.wallCollision()) {
+    playSound(hitWallSound)
+    gameOver()
+  }
+}
