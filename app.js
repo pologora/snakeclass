@@ -41,7 +41,7 @@ const displayScore = () => {
   speedItem.textContent = speedForStats
 }
 
-//stats after game
+//stats after game over
 const setModalStats = () => {
   scoreItemModal.textContent = score
   betstScoreItemModal.textContent = record
@@ -49,7 +49,6 @@ const setModalStats = () => {
 }
 
 displayScore()
-
 
 let food = {
   coordinates: randomCoordinates(),
@@ -237,13 +236,11 @@ const checkCollisions = () => {
     gameOver()
     return
   }
-
   if (snake.tailCollision()) {
     playSound(hitTailSound)
     gameOver()
     return
   }
-
   if (snake.wallCollision()) {
     playSound(hitWallSound)
     gameOver()
