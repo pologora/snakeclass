@@ -1,4 +1,4 @@
-import { canvasWidth } from './app.js'
+import { canvasWidth } from '../app.js'
 import { scale } from './constants.js'
 
 //generate coordinates on canvas for food and bomb

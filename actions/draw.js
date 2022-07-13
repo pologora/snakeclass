@@ -1,4 +1,4 @@
-import { canvasBackgroundColor, scale } from './constants.js'
+import { canvasBackgroundColor, scale } from '../utils/constants.js'
 
 const appleImage = document.getElementById('apple')
 const bombImage = document.getElementById('bomb')

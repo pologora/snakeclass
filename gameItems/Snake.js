@@ -19,7 +19,7 @@ class Snake {
     }
   }
 
-  show(ctx, color) {
+  draw(ctx, color) {
     let tailRadius = this.scale / 4
     for (let i = 0; i < this.body.length; i++) {
       tailRadius = tailRadius + (this.scale / 2 - this.scale / 4) / this.body.length

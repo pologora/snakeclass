@@ -1,8 +1,12 @@
-import Snake from './snake.js'
-import { scale, snakeColor, initialSnakeMoveSpeed, initialBombDuration, gameScoreTillBomb } from './constants.js'
-import { clearCanvas, drawBomb, drawCanvasBackground, drawFood } from './draw.js'
-import { decreaseBombDuration, increaseSnakeSpeed, playSound, randomCoordinates } from './utils.js'
-import { bombExplosionSound, eatFoodSound, hitWallSound, hitTailSound, moveSound } from './sound.js'
+import Snake from './gameItems/Snake.js'
+import { scale, snakeColor, initialSnakeMoveSpeed, initialBombDuration, gameScoreTillBomb } from './utils/constants.js'
+import { clearCanvas, drawBomb, drawCanvasBackground, drawFood } from './actions/draw.js'
+import { decreaseBombDuration, increaseSnakeSpeed, playSound, randomCoordinates } from './utils/utils.js'
+import { bombExplosionSound, eatFoodSound, hitWallSound, hitTailSound, moveSound } from './utils/sound.js'
+import Apple from './gameItems/Apple.js'
+
+const appleImage = document.getElementById('apple')
+const bombImage = document.getElementById('bomb')
 
 const scoreItem = document.getElementById('score')
 const betstScoreItem = document.getElementById('best-score')
@@ -137,7 +141,7 @@ const draw = () => {
 
   drawFood(ctx, food)
   snake.update()
-  snake.show(ctx, snakeColor)
+  snake.draw(ctx, snakeColor)
 
   checkCollisions()
 }
