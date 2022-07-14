@@ -4,6 +4,7 @@ import { clearCanvas, drawBomb, drawCanvasBackground, drawFood } from './actions
 import { decreaseBombDuration, increaseSnakeSpeed, playSound, randomCoordinates } from './utils/utils.js'
 import { bombExplosionSound, eatFoodSound, hitWallSound, hitTailSound, moveSound } from './utils/sound.js'
 import Apple from './gameItems/Apple.js'
+import Bomb from './gameItems/Bomb.js'
 
 const appleImage = document.getElementById('apple')
 const bombImage = document.getElementById('bomb')
@@ -18,14 +19,17 @@ const betstScoreItemModal = document.getElementById('best-score-modal')
 const speedItemModal = document.getElementById('speed-modal')
 const statsModalElement = document.getElementById('stats-modal')
 
-//---------------------------setup------------------------------------//
+//------------------------SETUP---------------------------------------//
+//-----------------------create game board----------------------------//
+const canvas = document.getElementById('canvas')
+const ctx = canvas.getContext('2d')
+export const canvasWidth = canvas.clientWidth
+//---------------------------variables------------------------------------//
 let speed = initialSnakeMoveSpeed
 let lastDirection = ''
-
-//variables for interval clearing
+//----------------------variables for interval clearing----------------//
 let snakeMoveInterval, bobmInterval
-
-//milliseconds
+//------------------------milliseconds---------------------------------//
 let bombDuration = initialBombDuration
 let minBombDuration = 2000
 
@@ -33,9 +37,31 @@ let score = 0
 let record = +window.localStorage.getItem('record')
 let speedForStats = 1
 
-const canvas = document.getElementById('canvas')
-const ctx = canvas.getContext('2d')
-export const canvasWidth = canvas.clientWidth
+const bombArray = []
+const foodArray = []
+
+const createFood = () => {
+  const { x, y } = randomCoordinates()
+  const food = new Apple(x, y, scale, scale, appleImage)
+  foodArray.push(food)
+}
+
+const createBomb = () => {
+  const { x, y } = randomCoordinates()
+  const bomb = new Bomb(x, y, scale, scale, appleImage)
+  bombArray.push(bomb)
+}
+
+let food = {
+  coordinates: randomCoordinates(),
+  name: 'food',
+}
+
+let bomb = {
+  coordinates: {},
+  name: 'bomb',
+}
+
 const snake = new Snake(scale)
 
 const displayScore = () => {
@@ -53,15 +79,6 @@ const setModalStats = () => {
 }
 
 displayScore()
-
-let food = {
-  coordinates: randomCoordinates(),
-  name: 'food',
-}
-let bomb = {
-  coordinates: {},
-  name: 'bomb',
-}
 
 //----------------------------------------------------------------------//
 

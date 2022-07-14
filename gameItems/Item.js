@@ -6,7 +6,7 @@ class Item {
     this.image = image
   }
 
-  show(ctx) {
+  draw(ctx) {
     ctx.drawImage(this.image, this.x, this.y, this.scale, this.scale)
   }
 
