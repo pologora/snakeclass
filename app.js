@@ -147,12 +147,8 @@ const resetGame = () => {
   clearInterval(foodIntervalId)
 }
 
-const draw = () => {
+const snakeEatFood = () => {
   const food = foodArray[0]
-
-  clearCanvas(ctx, canvas)
-  drawCanvasBackground(ctx, canvas)
-
   if (snake.touchItem(food)) {
     playSound(eatFoodSound)
     score++
@@ -176,13 +172,20 @@ const draw = () => {
       startGame()
     }
   }
+}
 
+const draw = () => {
+  clearCanvas(ctx, canvas)
+  drawCanvasBackground(ctx, canvas)
+
+  snakeEatFood()
+  
   snake.update()
   drawFood()
   drawBomb()
-  snake.draw(ctx, snakeColor)
-
   checkCollisions()
+  
+  snake.draw(ctx, snakeColor)
 }
 
 const move = () => {

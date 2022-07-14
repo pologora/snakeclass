@@ -15,5 +15,3 @@ export const playSound = (sound) => {
 
 export const increaseSnakeSpeed = (speed) => speed * 0.75
 
-//time in ms bomb will change its position
-export const decreaseBombDuration = (duration) => duration - 1000

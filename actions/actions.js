@@ -1,7 +1,5 @@
-import { canvasBackgroundColor, scale } from '../utils/constants.js'
+import { canvasBackgroundColor } from '../utils/constants.js'
 
-const appleImage = document.getElementById('apple')
-const bombImage = document.getElementById('bomb')
 
 export const drawCanvasBackground = (ctx, canvas) => {
   ctx.fillStyle = canvasBackgroundColor

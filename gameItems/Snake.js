@@ -1,4 +1,4 @@
-import Food from "./Food.js"
+import Food from './Food.js'
 
 class Snake {
   constructor(scale) {
@@ -30,6 +30,31 @@ class Snake {
       ctx.arc(this.body[i].x + this.scale / 2, this.body[i].y + this.scale / 2, tailRadius, 0, 2 * Math.PI)
       ctx.fill()
     }
+    //eyes
+    const scale = this.scale
+    const snakeHeadX = this.body[this.body.length - 1].x
+    const snakeHeadY = this.body[this.body.length - 1].y
+
+    ctx.beginPath()
+    if (this.xDir === 0 && this.yDir === -scale) {
+      //up
+      ctx.arc(snakeHeadX + scale / 5, snakeHeadY + scale / 5, scale / 8, 0, 2 * Math.PI)
+      ctx.arc(snakeHeadX + scale - scale / 5, snakeHeadY + scale / 5, scale / 8, 0, 2 * Math.PI)
+    } else if (this.xDir === 0 && this.yDir === scale) {
+      //down
+      ctx.arc(snakeHeadX + scale / 5, snakeHeadY + scale - scale / 5, scale / 8, 0, 2 * Math.PI)
+      ctx.arc(snakeHeadX + scale - scale / 5, snakeHeadY + scale - scale / 5, scale / 8, 0, 2 * Math.PI)
+    } else if (this.xDir === -scale && this.yDir === 0) {
+      //left
+      ctx.arc(snakeHeadX + scale / 5, snakeHeadY + scale / 5, scale / 8, 0, 2 * Math.PI)
+      ctx.arc(snakeHeadX + scale / 5, snakeHeadY + scale - scale / 5, scale / 8, 0, 2 * Math.PI)
+    } else {
+      //right
+      ctx.arc(snakeHeadX + scale - scale / 5, snakeHeadY + scale / 5, scale / 8, 0, 2 * Math.PI)
+      ctx.arc(snakeHeadX + scale - scale / 5, snakeHeadY + scale - scale / 5, scale / 8, 0, 2 * Math.PI)
+    }
+    ctx.fillStyle = '#fff'
+    ctx.fill()
   }
 
   setScale(scale) {
