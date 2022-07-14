@@ -1,9 +1,9 @@
 import Item from './Item.js'
 
-class Apple extends Item {
+class Food extends Item {
   constructor(xPoint, yPoint, scale, image) {
     super(xPoint, yPoint, scale, image)
   }
 }
 
-export default Apple
+export default Food

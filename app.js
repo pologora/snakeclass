@@ -1,9 +1,16 @@
 import Snake from './gameItems/Snake.js'
-import { scale, snakeColor, initialSnakeMoveSpeed, initialBombDuration, gameScoreTillBomb } from './utils/constants.js'
-import { clearCanvas, drawBomb, drawCanvasBackground, drawFood } from './actions/draw.js'
-import { decreaseBombDuration, increaseSnakeSpeed, playSound, randomCoordinates } from './utils/utils.js'
+import {
+  scale,
+  snakeColor,
+  initialSnakeMoveSpeed,
+  gameScoreTillBomb,
+  scoreTillIntervalOn,
+  foodChangePositionInterval,
+} from './utils/constants.js'
+import { clearCanvas, drawCanvasBackground } from './actions/actions.js'
+import { increaseSnakeSpeed, playSound, randomCoordinates } from './utils/utils.js'
 import { bombExplosionSound, eatFoodSound, hitWallSound, hitTailSound, moveSound } from './utils/sound.js'
-import Apple from './gameItems/Apple.js'
+import Food from './gameItems/Food.js'
 import Bomb from './gameItems/Bomb.js'
 
 const appleImage = document.getElementById('apple')
@@ -28,38 +35,61 @@ export const canvasWidth = canvas.clientWidth
 let speed = initialSnakeMoveSpeed
 let lastDirection = ''
 //----------------------variables for interval clearing----------------//
-let snakeMoveInterval, bobmInterval
-//------------------------milliseconds---------------------------------//
-let bombDuration = initialBombDuration
-let minBombDuration = 2000
+let snakeMoveIntervalId, foodIntervalId
 
 let score = 0
 let record = +window.localStorage.getItem('record')
 let speedForStats = 1
 
-const bombArray = []
-const foodArray = []
-
-const createFood = () => {
-  const { x, y } = randomCoordinates()
-  const food = new Apple(x, y, scale, scale, appleImage)
-  foodArray.push(food)
-}
+let bombArray = []
+let foodArray = []
 
 const createBomb = () => {
   const { x, y } = randomCoordinates()
-  const bomb = new Bomb(x, y, scale, scale, appleImage)
+  const bomb = new Bomb(x, y, scale, bombImage)
+  let samePosition = isEqualPositions(bomb) || isEqualPositionsWithSnake(bomb)
+  while (samePosition) {
+    changeBombPosition(bomb)
+    samePosition = isEqualPositions(bomb) || isEqualPositionsWithSnake(bomb)
+  }
   bombArray.push(bomb)
 }
 
-let food = {
-  coordinates: randomCoordinates(),
-  name: 'food',
+const createFood = () => {
+  const { x, y } = randomCoordinates()
+  const food = new Food(x, y, scale, appleImage)
+  let samePosition = isEqualPositions(food) || isEqualPositionsWithSnake(food)
+  while (samePosition) {
+    changeFoodPosition(food)
+    samePosition = isEqualPositions(food) || isEqualPositionsWithSnake(food)
+  }
+  foodArray.push(food)
 }
 
-let bomb = {
-  coordinates: {},
-  name: 'bomb',
+const changeFoodPosition = (food) => {
+  const { x, y } = randomCoordinates()
+  food.setNewPosition(x, y)
+}
+
+const drawFood = () => {
+  if (foodArray.length > 0) {
+    for (const food of foodArray) {
+      food.draw(ctx)
+    }
+  }
+}
+
+const drawBomb = () => {
+  if (bombArray.length > 0) {
+    for (const bomb of bombArray) {
+      bomb.draw(ctx)
+    }
+  }
+}
+
+const changeBombPosition = (bomb) => {
+  const { x, y } = randomCoordinates()
+  bomb.setNewPosition(x, y)
 }
 
 const snake = new Snake(scale)
@@ -91,73 +121,65 @@ startBtn.onclick = function () {
 
 const startGame = () => {
   window.addEventListener('keydown', keyPressed)
-  if (score >= gameScoreTillBomb) {
-    locateBomb()
-    bobmInterval = setInterval(locateBomb, bombDuration)
+  if (foodArray.length === 0) {
+    createFood()
   }
   gameLoop()
 }
 
 const gameLoop = () => {
-  if (snakeMoveInterval) {
-    clearInterval(snakeMoveInterval)
+  if (snakeMoveIntervalId) {
+    clearInterval(snakeMoveIntervalId)
   }
-  snakeMoveInterval = setInterval(() => {
+  snakeMoveIntervalId = setInterval(() => {
     draw()
   }, speed)
 }
 
-const locateFood = () => {
-  food.coordinates = { ...randomCoordinates() }
-}
-
-const locateBomb = () => {
-  bomb.coordinates = { ...randomCoordinates() }
-}
-
 const resetGame = () => {
   snake.reset()
-  bombDuration = initialBombDuration
   score = 0
   speedForStats = 1
-  bomb = {
-    coordinates: {},
-    name: 'bomb',
-  }
+  bombArray = []
   speed = initialSnakeMoveSpeed
   lastDirection = ''
-  clearInterval(snakeMoveInterval)
-  clearInterval(bobmInterval)
+  clearInterval(snakeMoveIntervalId)
+  clearInterval(foodIntervalId)
 }
 
 const draw = () => {
+  const food = foodArray[0]
+
   clearCanvas(ctx, canvas)
   drawCanvasBackground(ctx, canvas)
+
   if (snake.touchItem(food)) {
     playSound(eatFoodSound)
-    locateFood()
     score++
+    if (score >= scoreTillIntervalOn) {
+      if (foodIntervalId) clearInterval(foodIntervalId)
+      foodIntervalId = setInterval(() => {
+        foodArray.pop()
+        createFood()
+      }, foodChangePositionInterval)
+    }
+    foodArray.pop()
+    createFood()
     displayScore()
     if (score % 5 === 0) {
       speed = increaseSnakeSpeed(speed)
       speedForStats++
       displayScore()
-      if (bombDuration > minBombDuration) {
-        bombDuration = decreaseBombDuration(bombDuration)
+      if (score >= gameScoreTillBomb) {
+        createBomb()
       }
-      clearInterval(bobmInterval)
-      clearInterval(snakeMoveInterval)
       startGame()
     }
   }
-  checkSamePositions()
 
-  if (score >= gameScoreTillBomb) {
-    drawBomb(ctx, bomb)
-  }
-
-  drawFood(ctx, food)
   snake.update()
+  drawFood()
+  drawBomb()
   snake.draw(ctx, snakeColor)
 
   checkCollisions()
@@ -172,7 +194,7 @@ const move = () => {
 //immediately change move direction
 const changeMoveDirection = () => {
   playSound(moveSound)
-  clearInterval(snakeMoveInterval)
+  clearInterval(snakeMoveIntervalId)
   move()
 }
 
@@ -219,50 +241,34 @@ const gameOver = () => {
   statsModalElement.style.display = 'flex'
   resetGame()
   displayScore()
-  draw()
   setTimeout(() => {
     modal.style.display = 'block'
   }, 1000)
 }
-//------------------------------------check items position------------------------------//
-const isEqualPositions = (pos1, pos2) => {
-  return pos1.coordinates.x === pos2.coordinates.x && pos1.coordinates.y === pos2.coordinates.y
-}
-const isEqualPositionsWithSnake = (item) =>
-  snake.body.some((tale) => tale.x === item.coordinates.x && tale.y === item.coordinates.y)
 
-const checkFoodPosition = () => {
-  let samePosition = isEqualPositions(food, bomb) || isEqualPositionsWithSnake(food)
-  while (samePosition) {
-    locateFood()
-    samePosition = isEqualPositions(food, bomb) || isEqualPositionsWithSnake(food)
-  }
+//------------------------------------check items position------------------------------//
+const isEqualPositions = (item) => {
+  const isFood = foodArray.some((i) => i.x === item.x && i.y === item.y)
+  const isBomb = bombArray.some((i) => i.x === item.x && i.y === item.y)
+  return isFood || isBomb
 }
-const checkBombPosition = () => {
-  let samePosition = isEqualPositions(food, bomb) || isEqualPositionsWithSnake(bomb)
-  while (samePosition) {
-    locateBomb()
-    samePosition = isEqualPositions(food, bomb) || isEqualPositionsWithSnake(bomb)
-  }
-}
-const checkSamePositions = () => {
-  checkFoodPosition()
-  checkBombPosition()
-}
+
+const isEqualPositionsWithSnake = (item) => snake.body.some((tale) => tale.x === item.x && tale.y === item.y)
+
 //---------------------------------------------------------------------------------------------//
 //check game over cases
 const checkCollisions = () => {
-  if (snake.touchItem(bomb)) {
-    playSound(bombExplosionSound)
-    gameOver()
-    return
+  for (const bomb of bombArray) {
+    if (snake.touchItem(bomb)) {
+      playSound(bombExplosionSound)
+      gameOver()
+      return
+    }
   }
   if (snake.tailCollision()) {
     playSound(hitTailSound)
     gameOver()
-    return
-  }
-  if (snake.wallCollision()) {
+  } else if (snake.wallCollision()) {
     playSound(hitWallSound)
     gameOver()
   }

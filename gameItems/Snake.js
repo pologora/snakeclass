@@ -1,3 +1,5 @@
+import Food from "./Food.js"
+
 class Snake {
   constructor(scale) {
     this.body = [
@@ -46,8 +48,8 @@ class Snake {
   touchItem(item) {
     const headX = this.body[this.body.length - 1].x
     const headY = this.body[this.body.length - 1].y
-    if (headX === item.coordinates.x && headY === item.coordinates.y) {
-      if (item.name === 'food') {
+    if (headX === item.x && headY === item.y) {
+      if (item instanceof Food) {
         this.grow()
       }
       return true
